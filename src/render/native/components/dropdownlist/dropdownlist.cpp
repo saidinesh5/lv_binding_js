@@ -18,7 +18,7 @@ void Dropdownlist::setItems (std::vector<std::string>& items) {
         lv_dropdown_clear_options(this->instance);
     } else {
         std::string str;
-        for(int i=0; i < items.size(); i++) {
+        for(size_t i=0; i < items.size(); i++) {
             std::string item = items[i];
             item.append("\n");
             str.append(item.c_str());

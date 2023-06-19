@@ -43,6 +43,7 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     int32_t value_num = 0;
     const char* value_str;
     char buf[32];
+    std::string result;
 
     switch (comp_type)
     {
@@ -65,7 +66,6 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
 
         case COMP_TYPE_CALENDAR:
             lv_calendar_date_t date;
-            std::string result;
             lv_calendar_get_pressed_date(comp->instance, &date);
             result.append(std::to_string(date.year));
             result.append("-");
@@ -73,6 +73,9 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             result.append("-");
             result.append(std::to_string(date.day));
             return JS_NewString(ctx, result.c_str());
+
+        default:
+            return JS_UNDEFINED;
     }
 
     return JS_UNDEFINED;

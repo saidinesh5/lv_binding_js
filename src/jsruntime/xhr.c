@@ -164,7 +164,6 @@ static void CurlDoneCb(CURLcode result, void *arg) {
 static void CurlmDoneCb(CURLMsg *message, void *arg) {
     SJSXhr *x = arg;
 
-    CURL *easy_handle = message->easy_handle;
     CurlDoneCb(message->data.result, x);
 
     // The calling function will disengage the easy handle when this

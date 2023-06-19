@@ -24,7 +24,9 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             value_num = lv_chart_get_pressed_point(comp->instance);
             if(value_num == LV_CHART_POINT_NONE) break;
             return JS_NewInt32(ctx, value_num);
-            break;
+
+        default:
+            return JS_UNDEFINED;
     }
 
     return JS_UNDEFINED;

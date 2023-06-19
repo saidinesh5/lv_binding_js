@@ -59,7 +59,11 @@ static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int 
     return JS_UNDEFINED;
 };
 
+extern "C" {
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
+    SJS_CFUNC_DEF("nativeAppendChild", 0, NativeCompAppendChild),
+    SJS_CFUNC_DEF("nativeRemoveChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -74,6 +78,8 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
+
+}
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };

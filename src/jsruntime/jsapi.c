@@ -15,17 +15,20 @@ BOOL SJSJSApiListInit () {
         jsapi_list = ArrayCreat(2, sizeof(JSCFunctionListEntry));
         jsapi_inited = TRUE;
     }
+
+    return jsapi_inited;
 }
 
-BOOL SJSRegistJSApi (JSCFunctionListEntry* data) {
+BOOL SJSRegistJSApi (const JSCFunctionListEntry *data) {
     SJSJSApiListInit();
 
-    ArrayAppend(&jsapi_list, data);
+    return ArrayAppend(&jsapi_list, data);
 }
 
 BOOL SJSClearJSApi () {
     printf("clear jsapiList \n");
     free(jsapi_list.array);
+    return TRUE;
 }
 
 JSValue SJSGetJSBridge (JSContext* ctx) {
@@ -36,7 +39,6 @@ JSValue SJSGetJSBridge (JSContext* ctx) {
 }
 
 BOOL SJSJSApiInit(SJSRuntime *qrt) {
-    int i;
     JSContext* ctx = qrt->ctx;
     JSValue globalObj = JS_GetGlobalObject(qrt->ctx);
     JSValue jsBridge = JS_GetPropertyStr(ctx, globalObj, JSBRIDGE);
@@ -44,6 +46,7 @@ BOOL SJSJSApiInit(SJSRuntime *qrt) {
     JS_SetPropertyFunctionList(ctx, jsBridge, jsapi_list.array, jsapi_list.size);
     JS_FreeValue(ctx, globalObj);
     JS_FreeValue(ctx, jsBridge);
+    return TRUE;
 }
 
 BOOL SJSJSBridgeInit (SJSRuntime *qrt) {
@@ -53,4 +56,5 @@ BOOL SJSJSBridgeInit (SJSRuntime *qrt) {
     JS_SetProperty(qrt->ctx, globalObj, jsbridge_atom, jsBridge);
     JS_FreeValue(qrt->ctx, globalObj);
     JS_FreeAtom(qrt->ctx, jsbridge_atom);
+    return TRUE;
 }

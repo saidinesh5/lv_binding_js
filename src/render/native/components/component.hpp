@@ -322,5 +322,4 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
         SJS_CFUNC_DEF("top", 0, GetStyleTop),                                                                               \
         SJS_CFUNC_DEF("width", 0, GetStyleWidth),                                                                           \
         SJS_CFUNC_DEF("height", 0, GetStyleHeight),                                                                         \
-    };                                                                                                                      \
-                                                                                                                                                                                        \
+    };

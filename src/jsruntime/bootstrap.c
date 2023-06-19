@@ -5,8 +5,8 @@
 static BOOL COREJSAPI_INITED = FALSE;
 
 static JSValue SJSEvalModule(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    char* content = JS_ToCString(ctx, argv[0]);
-    char* fileName = JS_ToCString(ctx, argv[1]);
+    const char* content = JS_ToCString(ctx, argv[0]);
+    const char* fileName = JS_ToCString(ctx, argv[1]);
     JSValue func_val = JS_Eval(
         ctx,
         content,
@@ -49,13 +49,16 @@ BOOL SJSBootStrapCore (SJSRuntime* qrt) {
         COREJSAPI_INITED = TRUE;
         JS_SetPropertyFunctionList(qrt->ctx, global_obj, SJSNativeFunction, countof(SJSNativeFunction));
         JS_FreeValue(qrt->ctx, global_obj);
+        return TRUE;
     }
+
+    return FALSE;
 }
 
 void SJSBootStrapGlobals(JSContext *ctx, char *filepath) {
-    uint8_t *buf;
+    char *buf;
     size_t buf_len;
-    buf = js_load_file(ctx, &buf_len, filepath);
+    buf = (char*)js_load_file(ctx, &buf_len, filepath);
     JSValue val = JS_Eval(ctx, buf, buf_len, filepath, JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
 
     JSModuleSetImportMeta(ctx, val, TRUE);
@@ -95,7 +98,7 @@ static JSValue SJSExecuteBootStrapper (JSContext* ctx, char* path, char** params
     strcat(fullPath, SJSPATHSEP);
     strcat(fullPath, path);
 
-    char* buf = js_load_file(ctx, &buflen, fullPath);
+    char* buf = (char *)js_load_file(ctx, &buflen, fullPath);
     char newbuf[buflen + 1000];
     newbuf[0] = '\0';
     SJSWrapFunction(newbuf, buf, &newbuflen, params, paramc);
@@ -124,7 +127,7 @@ void SJSBootstrap (JSContext* ctx) {
     JSValue requireFunc = JS_GetPropertyStr(ctx, bootstrapLoader, "require");
     JSValue NativeModule = JS_GetPropertyStr(ctx, bootstrapLoader, "NativeModule");
     
-    char** params1[1];
+    char* params1[1];
     JSValue argv1[1];
     params1[0] = "require";
     argv1[0] = requireFunc;

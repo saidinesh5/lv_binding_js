@@ -9,7 +9,7 @@
 
 static char* BuiltInModuleNames[] = { "internal", "path" };
 
-char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *name)
+char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *name, void *opaque)
 {
     char basedir[PATH_MAX] = {0};
     char filePath[PATH_MAX] = {0};
@@ -20,7 +20,7 @@ char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *n
     ReplenishExt(newName);
 
     char first = name[0];
-    if (first != "." && first != SJSPATHSEP) {
+    if (first != '.' && first != SJSPATHSEP[0]) {
         char moduleName[PATH_MAX] = {0};
         strcat(moduleName, name);
         strtok(moduleName, "/");
@@ -55,7 +55,6 @@ char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *n
 int JSModuleSetImportMeta(JSContext *ctx, JSValueConst func_val, JS_BOOL is_main) {
     JSModuleDef *m;
     char buf[PATH_MAX] = {0};
-    int r;
     JSValue meta_obj;
     JSAtom module_name_atom;
     const char *module_name;

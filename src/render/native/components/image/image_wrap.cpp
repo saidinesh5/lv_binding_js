@@ -14,38 +14,45 @@ WRAPPED_JS_CLOSE_COMPONENT(Image, "Image")
 
 static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        size_t size;
-        uint8_t* buf = JS_GetArrayBuffer(ctx, &size, argv[0]);
-        COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, ImageClassID);
-        JSValue byteLength = JS_GetPropertyStr(ctx, argv[0], "byteLength");
-        int32_t image_bytelength;
-        JS_ToInt32(ctx, &image_bytelength, byteLength);
+        try {
+            size_t size;
+            uint8_t* buf = JS_GetArrayBuffer(ctx, &size, argv[0]);
+            COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, ImageClassID);
+            JSValue byteLength = JS_GetPropertyStr(ctx, argv[0], "byteLength");
+            int32_t image_bytelength;
+            JS_ToInt32(ctx, &image_bytelength, byteLength);
 
-        ((Image*)(s->comp))->setImageBinary(buf, static_cast<size_t>(image_bytelength));
-        LV_LOG_USER("Image %s setImage", s->uid);
+            ((Image*)(s->comp))->setImageBinary(buf, static_cast<size_t>(image_bytelength));
+            LV_LOG_USER("Image %s setImage", s->uid);
 
-        return JS_NewBool(ctx, 1);
-    fail:
-        return JS_ThrowInternalError(ctx, "image setBinary fail");
+            return JS_NewBool(ctx, 1);
+        } catch (std::exception& _) {
+            return JS_ThrowInternalError(ctx, "image setBinary fail");
+        }
     }
+
     return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetSymbol(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsString(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ImageClassID);
-        size_t len;
-        const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
-        std::string s = str;
-        s.resize(len);
+        try {
+            COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ImageClassID);
+            size_t len;
+            const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
+            std::string s = str;
+            s.resize(len);
 
-        ((Image*)(ref->comp))->setSymbol(s);
-        LV_LOG_USER("Image %s setYmbol", ref->uid);
-        JS_FreeCString(ctx, str);
+            ((Image*)(ref->comp))->setSymbol(s);
+            LV_LOG_USER("Image %s setYmbol", ref->uid);
+            JS_FreeCString(ctx, str);
 
-        return JS_NewBool(ctx, 1);
-    fail:
-        return JS_ThrowInternalError(ctx, "image setSymbol fail");
+            return JS_NewBool(ctx, 1);
+        }
+        catch (std::exception &_) {
+            return JS_ThrowInternalError(ctx, "image setSymbol fail");
+        }
+
     }
     return JS_UNDEFINED;
 };

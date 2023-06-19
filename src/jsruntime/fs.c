@@ -23,6 +23,7 @@
  */
 
 #include "sjs.h"
+#include <string.h>
 
 static JSClassID SJSFileClassID;
 
@@ -1330,8 +1331,9 @@ static int64_t TimeSpecToMS(const struct timespec *tv)
 #endif
 
 static JSValue SJSFSStatsSync(JSContext* ctx, JSValueConst this_val,
-                          int argc, JSValueConst *argv, int is_lstat)
+                          int argc, JSValueConst *argv)
 {
+    const int is_lstat = FALSE;
     const char *path;
     int err, res;
     struct stat st;
@@ -1421,7 +1423,7 @@ static JSValue SJSFSStatsSync(JSContext* ctx, JSValueConst this_val,
     return MakeObjError(ctx, obj, err);
 };
 
-static JSValue SJSReadFileSync(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+static JSValue SJSReadFileSync(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int _)
 {
     uint8_t *buf;
     const char *filename;
@@ -1545,7 +1547,7 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_MAGIC_DEF("readdir", 1, SJSFSReaddir, 0),
     SJS_CFUNC_MAGIC_DEF("readdirSync", 1, SJSFSReaddir, 1),
     SJS_CFUNC_MAGIC_DEF("readFile", 2, SJSFSReadFile, 0),
-    SJS_CFUNC_MAGIC_DEF("readFileSync", 2, SJSFSReadFile, 1),
+    SJS_CFUNC_MAGIC_DEF("readFileSync", 2, SJSReadFileSync, 1),
     SJS_CFUNC_MAGIC_DEF("writeFile", 2, SJSFSWriteFile, 0),
     SJS_CFUNC_MAGIC_DEF("writeFileSync", 2, SJSFSWriteFile, 1),
 };

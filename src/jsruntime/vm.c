@@ -12,6 +12,7 @@ void* SJSGetRuntimeOpaque (JSContext* ctx) {
 
 void* SJSSetRuntimeOpaque (SJSRuntime* qrt, void* data) {
     qrt->user_opaque = data;
+    return qrt->user_opaque;
 }
 
 static void UVStop(uv_async_t *handle) {
@@ -37,7 +38,7 @@ SJSRuntime* SJSNewRuntimeOptions(SJSRunOptions *options) {
 
 SJSRuntime* SJSNewRuntimeInternal(BOOL is_worker, SJSRunOptions *options) {
     SJSRuntime *qrt = calloc(1, sizeof(*qrt));
-    memcpy(&(qrt->options), options, sizeof(options));
+    memcpy(&(qrt->options), options, sizeof(SJSRunOptions));
 
     qrt->rt = JS_NewRuntime();
     qrt->ctx = JS_NewContext(qrt->rt);
@@ -82,11 +83,10 @@ static char* SJSMakeEntryCommonJS (char* buf, size_t *pbuf_len, char* filePath) 
     strcat(buf, "\")})()");
 
     *pbuf_len = strlen(buf);
+    return buf;
 };
 
 void SJSRunMain(SJSRuntime *qrt) {
-    size_t buf_len;
-    char buf[1000]= {0};
     JSContext *ctx = qrt->ctx;
 
     SJSBootstrap(ctx);
@@ -97,9 +97,8 @@ void OnUVClose(uv_handle_t* handle) {
 
 void OnUVWalk(uv_handle_t* handle, void* arg)
 {
-    switch (handle->type) {
-        case UV_TIMER:
-            SJSClearTimer((SJSTimer*)(handle->data));
+    if (handle->type == UV_TIMER) {
+        SJSClearTimer((SJSTimer*)(handle->data));
     }
 }
 
@@ -108,7 +107,7 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
         uv_unref((uv_handle_t *) &qrt->jobs.idle);
     }
 
-    uv_idle_stop((uv_handle_t *) &qrt->jobs.idle);
+    uv_idle_stop(&qrt->jobs.idle);
 
     if (qrt->curl_ctx.curlm_h) {
         curl_multi_cleanup(qrt->curl_ctx.curlm_h);
@@ -117,10 +116,8 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
 
     uv_walk(&qrt->loop, OnUVWalk, NULL);
 
-    int closed = 0, i;
-    for (i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         if (uv_loop_close(&qrt->loop) == 0) {
-            closed = 1;
             break;
         }
         uv_run(&qrt->loop, UV_RUN_NOWAIT);
@@ -132,6 +129,7 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
     JS_FreeRuntime(qrt->rt);
 
     free(qrt);
+    return TRUE;
 };
 
 #define UI_TIME 16
@@ -163,6 +161,7 @@ void SJSExecuteJobs(JSContext *ctx) {
 
 BOOL SJSDisableForeverLoop (SJSRuntime *qrt) {
     uv_unref((uv_handle_t *) &qrt->jobs.idle);
+    return TRUE;
 };
 
 BOOL SJSRunLoop(SJSRuntime *qrt) {

@@ -1,6 +1,8 @@
 
 #include "window.hpp"
 
+lv_obj_t* window_instance;
+
 lv_obj_t* GetWindowInstance () {
     return window_instance;
 };

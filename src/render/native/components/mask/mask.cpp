@@ -17,7 +17,6 @@ Mask::Mask(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
 
 void Mask::initCompStyle (int32_t type) {
     this->ensureStyle(type);
-    lv_style_t* style = this->style_map.at(type);
 
     uint32_t width, height;
     lv_disp_t* disp_default = lv_disp_get_default();

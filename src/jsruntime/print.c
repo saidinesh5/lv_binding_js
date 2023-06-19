@@ -26,5 +26,5 @@ static const JSCFunctionListEntry js_console_funcs[] = {
 };
 
 BOOL SJSPrintInit (SJSRuntime* qrt, JSValue ns) {
-    SJSRegistJSApi(&js_console_funcs);
+    return SJSRegistJSApi(&js_console_funcs);
 }

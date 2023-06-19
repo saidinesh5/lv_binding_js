@@ -1,5 +1,6 @@
 #include <cutils.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "sjs.h"
 
@@ -143,7 +144,7 @@ static JSValue SJSDnsGetaddrinfo(JSContext *ctx, JSValueConst this_val, int argc
         SJSObj2AddrInfo(ctx, opts, &hints);
     }
     
-    int r = uv_getaddrinfo(SJSGetLoop(ctx), &(gr->req), GetAddrInfoCallback, node, service, &hints);
+    uv_getaddrinfo(SJSGetLoop(ctx), &(gr->req), GetAddrInfoCallback, node, service, &hints);
     JS_FreeCString(ctx, node);
     JS_FreeCString(ctx, service);
 
@@ -163,5 +164,5 @@ static const JSCFunctionListEntry network[] = {
 };
 
 BOOL SJSNetworkInit (SJSRuntime* qrt, JSValue ns) {
-    SJSRegistJSApi(&network);
+    return SJSRegistJSApi(&network);
 };

@@ -92,7 +92,6 @@ int SJSCurlLoadHttp(DynBuf *dbuf, const char *url) {
 }
 
 static void CheckMultiInfo(SJSRuntime *qrt) {
-    char *done_url;
     CURLMsg *message;
     int pending;
 

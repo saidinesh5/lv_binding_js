@@ -1,6 +1,7 @@
 
 #include <util.h>
 #include <sjs.h>
+#include <string.h>
 
 Array ArrayCreat(size_t init_size, size_t item_size) {
     Array arr;
@@ -19,6 +20,7 @@ BOOL ArrayAppend(Array *arr, void* data) {
     // do copy
     memcpy((void *)(arr->array) + arr->size * arr->item_size, data, arr->item_size);
     arr->size++;
+    return TRUE;
 };
 
 BOOL ArrayExpand (Array *arr) {
@@ -26,7 +28,10 @@ BOOL ArrayExpand (Array *arr) {
         size_t new_size = arr->total_size * 2 * arr->item_size;
         arr->array = realloc(arr->array, new_size);
         arr->total_size = arr->total_size * 2;
+        return TRUE;
     }
+
+    return FALSE;
 };
 
 uv_loop_t* SJSGetLoop(JSContext *ctx) {

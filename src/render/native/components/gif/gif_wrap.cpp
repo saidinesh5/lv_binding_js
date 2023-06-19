@@ -19,15 +19,19 @@ static JSValue NativeCompSetGIFBinary(JSContext *ctx, JSValueConst this_val, int
         COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, GIFClassID);
         JSValue byteLength = JS_GetPropertyStr(ctx, argv[0], "byteLength");
         int32_t GIF_bytelength;
-        JS_ToInt32(ctx, &GIF_bytelength, byteLength);
 
-        ((GIF*)(s->comp))->setGIFBinary(buf, static_cast<size_t>(GIF_bytelength));
-        LV_LOG_USER("GIF %s setGIF", s->uid);
+        try {
+            JS_ToInt32(ctx, &GIF_bytelength, byteLength);
+            ((GIF*)(s->comp))->setGIFBinary(buf, static_cast<size_t>(GIF_bytelength));
+            LV_LOG_USER("GIF %s setGIF", s->uid);
 
-        return JS_NewBool(ctx, 1);
-    fail:
-        return JS_ThrowInternalError(ctx, "GIF setBinary fail");
+            return JS_NewBool(ctx, 1);
+        }
+        catch (std::exception&) {
+            return JS_ThrowInternalError(ctx, "GIF setBinary fail");
+        }
     }
+
     return JS_UNDEFINED;
 };
 

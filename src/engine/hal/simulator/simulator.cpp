@@ -1,12 +1,19 @@
 #include "./simulator.hpp"
 
+void* buf;
+
+lv_coord_t hor_res;
+lv_coord_t ver_res;
+
+read_cb read_cb1;
+read_cb read_cb2;
+read_cb read_cb3;
+
 void hal_init(void) {
     hor_res = SDL_HOR_RES;
     ver_res = SDL_VER_RES;
 
     static lv_color_t buf[SDL_HOR_RES * 100];
-
-    flush_cb = sdl_display_flush;
 
     read_cb1 = &sdl_mouse_read;
     read_cb2 = &sdl_keyboard_read;
@@ -23,7 +30,7 @@ void hal_init(void) {
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv); /*Basic initialization*/
     disp_drv.draw_buf = &disp_buf1;
-    disp_drv.flush_cb = flush_cb;
+    disp_drv.flush_cb = sdl_display_flush;
     disp_drv.hor_res = SDL_HOR_RES;
     disp_drv.ver_res = SDL_VER_RES;
 

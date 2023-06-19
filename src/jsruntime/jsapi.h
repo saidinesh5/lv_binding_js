@@ -8,7 +8,7 @@
 
 BOOL SJSJSApiInit (SJSRuntime *qrt);
 
-BOOL SJSRegistJSApi (JSCFunctionListEntry *data);
+BOOL SJSRegistJSApi (const JSCFunctionListEntry *data);
 
 BOOL SJSJSBridgeInit (SJSRuntime *qrt);
 

@@ -8,8 +8,8 @@ extern "C" {
 
 #include "native/core/style/font/font.hpp"
 
-static lv_theme_t theme_default;
+extern lv_theme_t theme_default;
 
-static bool theme_default_init = false;
+extern bool theme_default_init;
 
 void NativeThemeInit (JSContext* ctx, JSValue& ns);

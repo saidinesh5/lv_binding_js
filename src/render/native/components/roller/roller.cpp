@@ -17,7 +17,7 @@ void Roller::setOptions (std::vector<std::string>& options, uint32_t mode) {
         lv_roller_set_options(this->instance, "\0", mode);
     } else {
         std::string str;
-        for(int i=0; i < options.size(); i++) {
+        for(size_t i=0; i < options.size(); i++) {
             std::string item = options[i];
             str.append(item.c_str());
             if (i != options.size() - 1) {

@@ -38,7 +38,7 @@ enum ECOMP_TYPE {
 class BasicComponent {
   public:
     BasicComponent(std::string& uid);
-    ~BasicComponent();
+    virtual ~BasicComponent();
 
     lv_obj_t* instance = nullptr;
     lv_obj_t* parent_instance = nullptr;  // used to style position: fixed to normal position
