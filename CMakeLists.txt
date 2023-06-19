@@ -52,9 +52,9 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
     )
     find_package(OpenSSL REQUIRED)
     message(OPENSSL_SSL_LIBRARIES is ${OPENSSL_SSL_LIBRARIES})
-    string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+    string(STRIP "${SDL2_LIBRARIES}" SDL2_LIBRARIES)
     find_package(CURL REQUIRED)
-    string(STRIP ${CURL_LIBRARIES} CURL_LIBRARIES)
+    string(STRIP "${CURL_LIBRARIES}" CURL_LIBRARIES)
     add_executable(lvgljs
         ./src/utils/utils.c
         ./src/engine/hal/simulator/mouse_cursor_icon.c
